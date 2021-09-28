@@ -1,0 +1,36 @@
+specVersion: 0.0.2
+description: CandySwap Lottery
+repository: https://github.com/candies-swap
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Lottery
+    network: bsc
+    source:
+      address: '0xcb7ef054e50DDA993886DB75e3c7a32C8f2F73f5'
+      abi: Lottery
+      startBlock: 11296901
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      file: ./mappings/index.ts
+      entities:
+        - Lottery
+        - User
+        - Round
+      abis:
+        - name: Lottery
+          file: ./abis/Lottery.json
+      eventHandlers:
+        - event: LotteryOpen(indexed uint256,uint256,uint256,uint256,uint256,uint256)
+          handler: handleLotteryOpen
+        - event: LotteryClose(indexed uint256,uint256)
+          handler: handleLotteryClose
+        - event: LotteryNumberDrawn(indexed uint256,uint256,uint256)
+          handler: handleLotteryNumberDrawn
+        - event: TicketsPurchase(indexed address,indexed uint256,uint256)
+          handler: handleTicketsPurchase
+        - event: TicketsClaim(indexed address,uint256,indexed uint256,uint256)
+          handler: handleTicketsClaim
